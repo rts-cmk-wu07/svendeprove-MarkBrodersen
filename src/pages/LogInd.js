@@ -1,16 +1,16 @@
 import axios from "axios";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import Input from "../components/sub-components/Input.js";
 import TokenContext from "../context/TokenContext.js";
 import { motion } from "framer-motion";
 import backgroundImage from "../mockups/splash-image.jpg";
 import { X } from "lucide-react";
+import UserDataContext from "../context/UserDataContext.js";
 
-export default function LogInd({ modal, setModal }) {
-  const navigate = useNavigate();
+export default function LogInd({ modal, setModal, nav }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState("");
   const { token, setToken } = useContext(TokenContext);
   function handleSubmit(event) {
     event.preventDefault();
@@ -20,62 +20,99 @@ export default function LogInd({ modal, setModal }) {
         password: password,
       })
       .then(function (response) {
-        setToken(response.data.token, {
-          days: 10,
-        });
+        setToken(response.data.token);
+        console.log(response.data);
+        setUserId(response.data.userId);
         setModal(!modal);
       })
       .catch(function (error) {});
   }
+  console.log(userId);
+  // axios.get(
+  //   `http://localhost:4000/api/v1/users/${userId}`,
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }
+  // );
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: {
-          ease: "easeInOut",
-        },
-      }}
-      exit={{ translateX: "-100%" }}
-      className="w-screen h-screen absolute top-0 left-0"
-    >
-      <div
-        onClick={() => {
-          setModal(!modal);
-        }}
-        className="z-[60] w-12 h-12 mt-8 ml-8 flex justify-center items-center bg-primary-200 text-white rounded-full relative"
-      >
-        <X className="w-8 h-8" />
-      </div>
-      <div className="backgroundGradient h-screen w-screen z-50 absolute top-0 left-0"></div>
-      <img
-        className="w-screen h-screen object-cover fixed top-0 overflow-hidden z-40"
-        src={backgroundImage}
-        alt=""
-      />
-      <form
-        onSubmit={handleSubmit}
-        className="z-50 w-[80%] -translate-x-1/2 -translate-y-1/2 flex flex-col absolute top-1/2 left-1/2"
-      >
-        <Input
-          placeholder="brugernavn"
-          type="text"
-          text="Username"
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <Input
-          placeholder="adgangskode"
-          type="password"
-          text="Password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-        <button
-          className="px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
-          type="submit"
+    <>
+      {nav ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: {
+              ease: "easeInOut",
+            },
+          }}
+          exit={{ translateX: "-100%" }}
+          className="w-screen h-screen absolute top-0  left-0"
         >
-          Log ind
-        </button>
-      </form>
-    </motion.div>
+          <div className="bg-black/20 h-screen ">
+            <div
+              onClick={() => {
+                setModal(!modal);
+              }}
+              className="z-[60] bg-opacity-40 w-12 h-12 mt-8 ml-8 flex justify-center items-center bg-primary-200 text-white rounded-full relative"
+            >
+              <X className="w-8 h-8" />
+            </div>
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: {
+              ease: "easeInOut",
+            },
+          }}
+          exit={{ translateX: "-100%" }}
+          className="w-screen h-screen absolute top-0 left-0"
+        >
+          <div
+            onClick={() => {
+              setModal(!modal);
+            }}
+            className="z-[60] bg-opacity-40 w-12 h-12 mt-8 ml-8 flex justify-center items-center bg-primary-200 text-white rounded-full relative"
+          >
+            <X className="w-8 h-8" />
+          </div>
+          <div className="backgroundGradient h-screen w-screen z-50 absolute top-0 left-0"></div>
+          <img
+            className="w-screen h-screen object-cover fixed top-0 overflow-hidden z-40"
+            src={backgroundImage}
+            alt=""
+          />
+          <form
+            onSubmit={handleSubmit}
+            className="z-50 w-[80%] -translate-x-1/2 -translate-y-1/2 flex flex-col absolute top-1/2 left-1/2"
+          >
+            <h1 className="text-5xl text-white">Log ind</h1>
+            <Input
+              placeholder="brugernavn"
+              type="text"
+              text="Username"
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <Input
+              placeholder="adgangskode"
+              type="password"
+              text="Password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <button
+              className="px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
+              type="submit"
+            >
+              Log ind
+            </button>
+          </form>
+        </motion.div>
+      )}
+    </>
   );
 }

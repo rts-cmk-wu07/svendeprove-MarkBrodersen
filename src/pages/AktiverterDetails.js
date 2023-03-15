@@ -4,9 +4,12 @@ import { useContext, useState } from "react";
 import TokenContext from "../context/TokenContext";
 import LogInd from "./LogInd";
 import { AnimatePresence } from "framer-motion";
+import UserDataContext from "../context/UserDataContext";
+import axios from "axios";
 
 export default function AktiverterDetails() {
   const { token } = useContext(TokenContext);
+  const { userData } = useContext(UserDataContext);
   const [modal, setModal] = useState(false);
   const id = useParams().id;
   const { data, loading } = useAxios({
@@ -15,9 +18,23 @@ export default function AktiverterDetails() {
       accept: "application/json",
     },
   });
+  console.log(userData);
   function handleModal() {
     setModal(!modal);
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+    axios.post(
+      `http://localhost:4000/api/v1/users/${userData}/activities/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  }
+  console.log(token);
+  console.log(userData);
   return (
     <div>
       {data && (
@@ -35,7 +52,10 @@ export default function AktiverterDetails() {
               Log Ind
             </button>
           ) : (
-            <button className="absolute top-1/2 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200">
+            <button
+              onClick={handleSubmit}
+              className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
+            >
               Tilmeld
             </button>
           )}

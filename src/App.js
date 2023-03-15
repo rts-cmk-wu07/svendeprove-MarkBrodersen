@@ -5,11 +5,13 @@ import Home from "./pages/Home";
 import TokenContext from "./context/TokenContext";
 import { useState } from "react";
 import Calendar from "./pages/Calendar";
-import Search from "./pages/Search";
 import AktiverterDetails from "./pages/AktiverterDetails";
 import Welcome from "./pages/Welcome";
+import UserDataContext from "./context/UserDataContext";
+import SearchPage from "./pages/SearchPage";
 
 export default function App() {
+  const [userData, setUserData] = useState([]);
   const [token, setToken] = useState("");
   const router = createBrowserRouter([
     {
@@ -31,14 +33,16 @@ export default function App() {
         },
         {
           path: "/search",
-          element: <Search />,
+          element: <SearchPage />,
         },
       ],
     },
   ]);
   return (
     <TokenContext.Provider value={{ token, setToken }}>
-      <RouterProvider router={router} />
+      <UserDataContext.Provider value={{ userData, setUserData }}>
+        <RouterProvider router={router} />
+      </UserDataContext.Provider>
     </TokenContext.Provider>
   );
 }

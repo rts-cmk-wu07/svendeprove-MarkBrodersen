@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 export default function AktiverterList({ item }) {
   return (
     <Link
+      key={item.id}
       to={`/aktiverterDetails/${item.id}`}
       className="w-[22rem] h-[22rem] rounded-[3rem] relative"
     >
