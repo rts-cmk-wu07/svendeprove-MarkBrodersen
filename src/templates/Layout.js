@@ -3,7 +3,7 @@ import Navigation from "./Navigation";
 
 export default function Layout() {
   return (
-    <main className="w-screen h-screen bg-primary-200">
+    <main className="w-screen h-screen">
       <Outlet />
       <Navigation />
     </main>

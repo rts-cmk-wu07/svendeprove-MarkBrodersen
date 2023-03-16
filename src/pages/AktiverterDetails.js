@@ -1,6 +1,6 @@
 import useAxios from "../hooks/useAxios";
 import { useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TokenContext from "../context/TokenContext";
 import LogInd from "./LogInd";
 import { AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ export default function AktiverterDetails() {
   const { token } = useContext(TokenContext);
   const { userData } = useContext(UserDataContext);
   const [modal, setModal] = useState(false);
+  const [signUp, setSignUp] = useState(false);
   const id = useParams().id;
   const { data, loading } = useAxios({
     url: `http://localhost:4000/api/v1/activities/${id}`,
@@ -18,23 +19,53 @@ export default function AktiverterDetails() {
       accept: "application/json",
     },
   });
-  console.log(userData);
-  function handleModal() {
-    setModal(!modal);
+  const userId = data && data.users.map((user) => user.id);
+  const userIdIndex = userId && userId.shift();
+  function HandleClick() {
+    if (userId && userId.includes(userData) === true) {
+      setSignUp(true);
+    } else {
+      setSignUp(false);
+    }
   }
-  function handleSubmit(event) {
-    event.preventDefault();
-    axios.post(
-      `http://localhost:4000/api/v1/users/${userData}/activities/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-  }
-  console.log(token);
+  console.log(signUp);
+  console.log(data && data.users);
+  console.log(userId && userId);
   console.log(userData);
+  async function handleSubmit() {
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/v1/users/${userData}/activities/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function handleDelete() {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/v1/users/${userData}/activities/${id}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // console.log(token);
+  // console.log(userData);
   return (
     <div>
       {data && (
@@ -46,19 +77,31 @@ export default function AktiverterDetails() {
           />
           {token === "" ? (
             <button
-              onClick={handleModal}
+              onClick={() => {
+                setModal(!modal);
+              }}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
             >
               Log Ind
             </button>
-          ) : (
+          ) : null}
+          {signUp ? (
             <button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
             >
               Tilmeld
             </button>
-          )}
+          ) : null}
+          {signUp === false ? (
+            <button
+              onClick={() => handleDelete}
+              className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
+            >
+              Forlad
+            </button>
+          ) : null}
+
           <AnimatePresence>
             {modal ? <LogInd modal={modal} setModal={setModal} /> : null}
           </AnimatePresence>

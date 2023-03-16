@@ -28,10 +28,18 @@ export default function SearchPage() {
         />
         <Search className="text-white absolute right-2 top-3" />
       </form>
+      {searchQuery === "" || results === false ? (
+        <div className="text-center">
+          <p className="text-white text-2xl">
+            Der blev ikke fundet nogle aktiviteter. Prøv at søge efter noget
+            andet.
+          </p>
+        </div>
+      ) : null}
       {results && (
-        <div className="flex flex-col gap-4 mt-12">
+        <div className="flex flex-col  gap-8 mt-12">
           {filter.map((item) => {
-            return <AktiverterList item={item} />;
+            return <AktiverterList key={item.id} item={item} />;
           })}
         </div>
       )}
