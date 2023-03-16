@@ -20,18 +20,17 @@ export default function AktiverterDetails() {
     },
   });
   const userId = data && data.users.map((user) => user.id);
-  const userIdIndex = userId && userId.shift();
-  function HandleClick() {
-    if (userId && userId.includes(userData) === true) {
-      setSignUp(true);
-    } else {
-      setSignUp(false);
-    }
-  }
   console.log(signUp);
   console.log(data && data.users);
   console.log(userId && userId);
   console.log(userData);
+  function handleTilmeld() {
+    if (userId && userId.includes(userData) === true) {
+      handleSubmit();
+    } else {
+      handleDelete();
+    }
+  }
   async function handleSubmit() {
     try {
       const response = await axios.post(
@@ -43,7 +42,7 @@ export default function AktiverterDetails() {
           },
         }
       );
-
+      setSignUp(!signUp);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -59,13 +58,13 @@ export default function AktiverterDetails() {
           },
         }
       );
+      setSignUp(!signUp);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
-  // console.log(token);
-  // console.log(userData);
+
   return (
     <div>
       {data && (
@@ -87,7 +86,7 @@ export default function AktiverterDetails() {
           ) : null}
           {signUp ? (
             <button
-              onClick={() => handleSubmit}
+              onClick={() => handleTilmeld}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
             >
               Tilmeld
@@ -95,7 +94,7 @@ export default function AktiverterDetails() {
           ) : null}
           {signUp === false ? (
             <button
-              onClick={() => handleDelete}
+              onClick={() => handleTilmeld}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
             >
               Forlad
