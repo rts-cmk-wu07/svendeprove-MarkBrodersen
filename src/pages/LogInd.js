@@ -23,25 +23,14 @@ export default function LogInd({ modal, setModal, nav }) {
       })
       .then(function (response) {
         if (checked) {
-          console.log(response.data);
           setCookie(JSON.stringify(response.data));
         }
         setToken(response.data.token);
-        console.log(response.data);
         setUserId(response.data.userId);
         setModal(!modal);
       })
       .catch(function (error) {});
   }
-  console.log(userId);
-  // axios.get(
-  //   `http://localhost:4000/api/v1/users/${userId}`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }
-  // );
   return (
     <>
       {nav ? (

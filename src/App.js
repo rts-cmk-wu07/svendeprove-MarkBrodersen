@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Calendar from "./pages/Calendar";
 import Welcome from "./pages/Welcome";
 import SearchPage from "./pages/SearchPage";
+import InstructorCalendar from "./templates/InstructorCalendar";
 import AktiverterDetails from "./pages/AktiverterDetails";
 import TokenContext from "./context/TokenContext";
 import UserDataContext from "./context/UserDataContext";
@@ -40,6 +41,10 @@ export default function App() {
         {
           path: "/calendar",
           element: <Calendar />,
+        },
+        {
+          path: "/holdOversigt/:id",
+          element: <InstructorCalendar />,
         },
         {
           path: "/search",

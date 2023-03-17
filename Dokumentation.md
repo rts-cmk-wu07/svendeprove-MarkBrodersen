@@ -89,7 +89,7 @@ export default function useAxios({ url, method = "GET", headers = {} }) {
   useEffect(
     function () {
       (async function () {
-        if (!url) throw new Error(`¯\_(ツ)_/¯`);
+        if (!url) throw new Error(`Invaild url`);
         try {
           setLoading(true);
           const response = await axios({ url, method, headers });

@@ -11,7 +11,7 @@ export default function AktiverterDetails() {
   const { token } = useContext(TokenContext);
   const { userData } = useContext(UserDataContext);
   const [modal, setModal] = useState(false);
-  const [signUp, setSignUp] = useState(false);
+  const [checker, setChecker] = useState(null);
   const id = useParams().id;
   const { data, loading } = useAxios({
     url: `http://localhost:4000/api/v1/activities/${id}`,
@@ -20,15 +20,23 @@ export default function AktiverterDetails() {
     },
   });
   const userId = data && data.users.map((user) => user.id);
-  console.log(signUp);
-  console.log(data && data.users);
-  console.log(userId && userId);
-  console.log(userData);
-  function handleTilmeld() {
-    if (userId && userId.includes(userData) === true) {
-      handleSubmit();
+
+  useEffect(() => {
+    if (userId && userId.includes(userData) === false) {
+      setChecker(false);
     } else {
-      handleDelete();
+      setChecker(true);
+    }
+  }, []);
+
+  async function handleTilmeld(event) {
+    event.preventDefault();
+    if (userId && userId.includes(userData) === false) {
+      await handleSubmit();
+      setChecker(false);
+    } else {
+      await handleDelete();
+      setChecker(true);
     }
   }
   async function handleSubmit() {
@@ -42,7 +50,6 @@ export default function AktiverterDetails() {
           },
         }
       );
-      setSignUp(!signUp);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -58,13 +65,16 @@ export default function AktiverterDetails() {
           },
         }
       );
-      setSignUp(!signUp);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
 
+  console.log(data && data.users);
+  console.log(userId && userId);
+  console.log(userData);
+  console.log(checker);
   return (
     <div>
       {data && (
@@ -83,22 +93,20 @@ export default function AktiverterDetails() {
             >
               Log Ind
             </button>
-          ) : null}
-          {signUp ? (
-            <button
-              onClick={() => handleTilmeld}
+          ) : checker === false ? (
+            <input
+              type="submit"
+              value="Tilmeld"
+              onClick={handleTilmeld}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
-            >
-              Tilmeld
-            </button>
-          ) : null}
-          {signUp === false ? (
-            <button
-              onClick={() => handleTilmeld}
+            />
+          ) : checker === true ? (
+            <input
+              type="submit"
+              value="Forlad"
+              onClick={handleTilmeld}
               className="absolute top-1/2 -translate-y-6 right-8 px-24 py-4 shadow-lg text-white rounded-xl bg-primary-200"
-            >
-              Forlad
-            </button>
+            />
           ) : null}
 
           <AnimatePresence>

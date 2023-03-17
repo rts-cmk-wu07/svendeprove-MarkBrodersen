@@ -1,17 +1,23 @@
 import { useContext } from "react";
+import TokenContext from "../context/TokenContext";
 import UserDataContext from "../context/UserDataContext";
+import useAxios from "../hooks/useAxios";
 import DefaultCalendar from "../templates/DefaultCalendar";
-import InstructorCalendar from "../templates/InstructorCalendar";
 
 export default function Calendar() {
   const { userData } = useContext(UserDataContext);
+  const { token } = useContext(TokenContext);
+
+  const { data } = useAxios({
+    url: `http://localhost:4000/api/v1/users/${userData}`,
+
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   return (
-    <div>
-      {userData.role === "Instructor" ? (
-        <InstructorCalendar />
-      ) : (
-        <DefaultCalendar />
-      )}
+    <div className="w-[90%] m-auto">
+      <DefaultCalendar users={data} />
     </div>
   );
 }
