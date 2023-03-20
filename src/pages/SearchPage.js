@@ -1,6 +1,7 @@
-import { Search } from "lucide-react";
+import { Search, Archive } from "lucide-react";
 import { useState } from "react";
 import AktiverterList from "../components/AktiverterList";
+import Loading from "../components/animations/Loading";
 import useAxios from "../hooks/useAxios";
 export default function SearchPage() {
   const { data, loading } = useAxios({
@@ -28,13 +29,16 @@ export default function SearchPage() {
         />
         <Search className="text-white absolute right-2 top-3" />
       </form>
-      {searchQuery === "" || results === false ? (
-        <div className="text-center">
-          <p className="text-white text-2xl">
-            Der blev ikke fundet nogle aktiviteter. Prøv at søge efter noget
-            andet.
-          </p>
-        </div>
+      {loading ? (
+        <Loading />
+      ) : searchQuery === "" || results === false ? (
+        <article className="text-center flex flex-col justify-center items-center gap-2">
+          <Archive className="text-white w-12 h-12" />
+          <h2 className="text-white text-xl">
+            Der blev ikke fundet nogle aktiviteter.
+          </h2>
+          <p className="text-white text-lg">Prøv at søge efter noget andet.</p>
+        </article>
       ) : null}
       {results && (
         <div className="flex flex-col  gap-8 mt-12">

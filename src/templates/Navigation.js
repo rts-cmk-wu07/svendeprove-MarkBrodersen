@@ -1,13 +1,14 @@
 import { Home, Search, Calendar, User } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import TokenContext from "../context/TokenContext";
 import LogInd from "../pages/LogInd";
 import { AnimatePresence } from "framer-motion";
+import ModalContext from "../context/ModalContext";
 
 export default function Navigation() {
   const { token } = useContext(TokenContext);
-  const [modal, setModal] = useState(false);
+  const { modal, setModal } = useContext(ModalContext);
   return (
     <div className="z-30 flex justify-between items-center fixed bottom-0 bg-primary-100 w-screen h-16 px-12">
       <AnimatePresence>

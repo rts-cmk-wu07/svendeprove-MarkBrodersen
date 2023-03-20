@@ -10,11 +10,13 @@ import InstructorCalendar from "./templates/InstructorCalendar";
 import AktiverterDetails from "./pages/AktiverterDetails";
 import TokenContext from "./context/TokenContext";
 import UserDataContext from "./context/UserDataContext";
+import ModalContext from "./context/ModalContext";
 import { getCookie } from "react-use-cookie";
 
 export default function App() {
   const [userData, setUserData] = useState([]);
   const [token, setToken] = useState("");
+  const [modal, setModal] = useState(false);
   const cookieToken = getCookie("token");
   useEffect(() => {
     if (cookieToken) {
@@ -56,7 +58,9 @@ export default function App() {
   return (
     <TokenContext.Provider value={{ token, setToken }}>
       <UserDataContext.Provider value={{ userData, setUserData }}>
-        <RouterProvider router={router} />
+        <ModalContext.Provider value={{ modal, setModal }}>
+          <RouterProvider router={router} />
+        </ModalContext.Provider>
       </UserDataContext.Provider>
     </TokenContext.Provider>
   );

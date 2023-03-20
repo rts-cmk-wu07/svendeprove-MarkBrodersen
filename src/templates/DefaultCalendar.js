@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export default function DefaultCalendar({ users }) {
   const { userData } = useContext(UserDataContext);
   const [rosterData, setRosterData] = useState(null);
-  const { data, loading } = useAxios({
+  const { data } = useAxios({
     url: `http://localhost:4000/api/v1/activities`,
     headers: {
       accept: "application/json",
@@ -20,7 +20,6 @@ export default function DefaultCalendar({ users }) {
       setRosterData(rosterActivities);
     })();
   }, [data]);
-
   return (
     <>
       {users && users.role === "instructor" ? (
